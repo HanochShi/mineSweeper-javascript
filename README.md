@@ -1,1 +1,1 @@
-"# mineSweeper-javascript" 
+# mineSweeper-javascript
