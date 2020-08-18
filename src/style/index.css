@@ -27,6 +27,7 @@ code {
 .title-bar .left {
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .title-bar img {
@@ -41,7 +42,7 @@ code {
 
 .title-bar-buttons button {
   display: inline-block;
-  width: 3em;
+  width: 2em;
   height: 1.5em;
   font-size: 1.5em;
   font-weight: 1;
@@ -76,4 +77,74 @@ code {
 .menu-bar ul li:hover {
   background-color: rgb(229,243,255);
   border: 1px solid rgb(216,237,255)
+}
+
+.game-panel, .info-panel {
+  background-color: rgb(192,192,192);
+}
+
+.game-panel {
+  border: 3px solid #fff;
+  padding: 7px;
+}
+
+.info-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 3px inset #fff;
+  padding: 6px;
+}
+
+#leftMineCount, #timeElapsed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 51px;
+  padding: 2px;
+  background-color: #000;
+}
+
+#leftMineCount img, #timeElapsed img {
+  width: 1em;
+  margin: 1px auto;
+}
+
+#restartButton {
+  width: 25px;
+  height: 25px;
+  background-size: 80%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  border: 2px outset #fff;
+  outline: 1.5px solid #8d8d8d;
+}
+
+#restartButton:active {
+  width: 25px;
+  height: 25px;
+  background-size: 80%;
+  background-position: 90% 90%;
+  background-repeat: no-repeat;
+  border: 2px inset #fff;
+  outline: none;
+}
+
+.chess-panel {
+  margin: 7px 0 0 0;
+  line-height: 18px;
+}
+
+.cell {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  background-color: #c0c0c0;
+  border: 2px outset #fff;
+  outline: none;
+}
+
+.cell:active {
+  border: 2px inset #fff;
 }
