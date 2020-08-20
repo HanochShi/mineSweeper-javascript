@@ -17,7 +17,6 @@ class InfoPanel extends React.Component {
     }
 
     render() {
-        console.log(numberPath)
         let leftMineCountLCD = [
                 Math.floor(this.state.leftMineCount / 100), 
                 Math.floor(this.state.leftMineCount / 10) % 10,
@@ -32,9 +31,9 @@ class InfoPanel extends React.Component {
         return (
             <div className="info-panel">
                 <div id="leftMineCount">
-                    <img src={numberPath[leftMineCountLCD[0]]} />
-                    <img src={numberPath[leftMineCountLCD[1]]} />
-                    <img src={numberPath[leftMineCountLCD[2]]} />
+                    <img src={numberPath[leftMineCountLCD[0]]} alt={leftMineCountLCD[0]} />
+                    <img src={numberPath[leftMineCountLCD[1]]} alt={leftMineCountLCD[1]} />
+                    <img src={numberPath[leftMineCountLCD[2]]} alt={leftMineCountLCD[2]} />
                 </div>
                 <button
                     id="restartButton"
@@ -44,72 +43,12 @@ class InfoPanel extends React.Component {
                     >
                 </button>
                 <div id="timeElapsed">
-                    <img src={numberPath[timeElapseLCD[0]]} />
-                    <img src={numberPath[timeElapseLCD[1]]} />
-                    <img src={numberPath[timeElapseLCD[2]]} />
+                    <img src={numberPath[timeElapseLCD[0]]} alt={timeElapseLCD[0]} />
+                    <img src={numberPath[timeElapseLCD[1]]} alt={timeElapseLCD[1]} />
+                    <img src={numberPath[timeElapseLCD[2]]} alt={timeElapseLCD[2]} />
                 </div>
             </div>
         )
-    }
-}
-
-class RestartButton extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            "pressed": false,
-        }
-    }
-
-    render() {
-        const pressed = this.state.pressed
-        if (!pressed) {
-            return (
-                <button
-                    id="restartButton"
-                    style={{
-                    backgroundImage: `url(${smilePath})`,
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "80%",
-                    border: "4px outset #fff",
-                    }}
-                    // onMouseDown={ (e) => {
-                    //     this.setState({pressed: true})
-                    //     e.preventDefault()
-                    //     } }
-                    // onMouseUP={ (e) => {
-                    //     this.setState({pressed: false})
-                    //     e.preventDefault()
-                    //     } }
-                    >
-                </button>
-            )
-        } else {
-            return (
-                <button
-                    id="restartButton"
-                    style={{
-                    backgroundImage: `url(${smilePath})`,
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "80%",
-                    border: "4px inset #fff",
-                    }}
-                    // onMouseDown={ (e) => {
-                    //     this.setState({pressed: true})
-                    //     e.preventDefault()
-                    //     } }
-                    // onMouseUP={ (e) => {
-                    //     this.setState({pressed: false})
-                    //     e.preventDefault()
-                    //     } }
-                    >
-                </button>
-            )
-        }
-
-        
     }
 }
 
