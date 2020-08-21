@@ -9,14 +9,14 @@ class MineSweeper extends React.Component {
         this.state = {
             cellRowCount: 9,
             cellColumnCount: 9,
-            mineCount: 2,
+            mineCount: 10,
             mineState: null,
             chessState: null,
             gameOver: false,
             gameWin: false,
             numberOfCell: [],
             timeElapsed: 0,
-            leftMineCount: 2,
+            leftMineCount: 0,
             timer: null,
             cellExplored: 0,
             mousePressed: false,
@@ -32,6 +32,8 @@ class MineSweeper extends React.Component {
             7: flagged but actually not mine 
             */
         }
+
+        this.state.leftMineCount = this.state.mineCount
 
         //create a 2-dim array to store if there's a mine in every certain cell 
         this.state.mineState = []
