@@ -1,5 +1,8 @@
 import React from 'react';
-import smilePath from './assets/image/smile.png';
+import smilePic from './assets/image/smile.png';
+import deadPic from './assets/image/dead.png';
+import winPic from './assets/image/win.png';
+import shockingPic from './assets/image/shocking.png'
 
 let nums = []
 for (let i = 0; i < 10; ++i) {
@@ -8,25 +11,30 @@ for (let i = 0; i < 10; ++i) {
 const numberPath = nums.map(item => require("./assets/image/" + item + ".png"))
 
 class InfoPanel extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            leftMineCount: 40,
-            timeElapse: 0,
-        }
-    }
+    
+    render(props) {
 
-    render() {
         let leftMineCountLCD = [
-                Math.floor(this.state.leftMineCount / 100), 
-                Math.floor(this.state.leftMineCount / 10) % 10,
-                Math.floor(this.state.leftMineCount % 10)
+                Math.floor(this.props.leftminecount / 100), 
+                Math.floor(this.props.leftminecount / 10) % 10,
+                Math.floor(this.props.leftminecount % 10)
             ],
             timeElapseLCD = [
-                Math.floor(this.state.timeElapse / 100), 
-                Math.floor(this.state.timeElapse / 10) % 10,
-                Math.floor(this.state.timeElapse % 10)
+                Math.floor(this.props.timeelapsed / 100), 
+                Math.floor(this.props.timeelapsed / 10) % 10,
+                Math.floor(this.props.timeelapsed % 10)
             ];
+
+        let buttonPic = null
+        if (this.props.gameover) {
+            buttonPic = deadPic
+        } else if (this.props.gamewin) {
+            buttonPic = winPic
+        } else if (this.props.mousepressed) {
+            buttonPic = shockingPic
+        } else {
+            buttonPic = smilePic
+        }
 
         return (
             <div className="info-panel">
@@ -38,8 +46,9 @@ class InfoPanel extends React.Component {
                 <button
                     id="restartButton"
                     style={{
-                    backgroundImage: `url(${smilePath})`,
+                    backgroundImage: `url(${buttonPic})`,
                     }}
+                    onClick={this.props.handlerestart}
                     >
                 </button>
                 <div id="timeElapsed">

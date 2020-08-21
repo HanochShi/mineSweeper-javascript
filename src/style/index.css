@@ -153,8 +153,13 @@ code {
   outline: none;
 }
 
-.cell:active {
+/* .cell:active {
   border: 2px inset #fff;
+} */
+
+.pressed {
+  border: 1px solid #868686;
+  color: transparent;
 }
 
 .unexplored {
@@ -166,20 +171,22 @@ code {
   border: 1px solid #868686;
 }
 
-.flagged {
+.flagged, .flagged:active {
   color: transparent;
   background-image: url("../assets/image/flag.png");
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
+  border: 2px outset #fff;
 }
 
-.questioned {
+.questioned, .questioned:active {
   color: transparent;
   background-image: url("../assets/image/question.png");
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
+  border: 2px outset #fff;
 }
 
 .triggered {
@@ -193,6 +200,14 @@ code {
 .revealed {
   color: transparent;
   background-image: url("../assets/image/bomb.png");
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.wrong-flagged {
+  color: transparent;
+  background-image: url("../assets/image/bomb-wrong.png");
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;

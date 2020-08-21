@@ -1,12 +1,7 @@
 import React from 'react';
+import { renderIntoDocument } from 'react-dom/test-utils';
 
 class Cell extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            cellState: props.cellstate
-        }
-    }
 
     render(props) {
         const cellState = this.props.cellstate.toString()
@@ -18,7 +13,7 @@ class Cell extends React.Component {
         let cellClass = ""
         switch(cellState) {
             case "0": 
-                if(!this.props.gameover) {
+                if(!this.props.gameover && !this.props.gamewin) {
                     cellClass="cell unexplored"
                 } else {
                     cellClass="cell disabled"
@@ -39,12 +34,19 @@ class Cell extends React.Component {
             case "5":
                 cellClass="cell explored revealed"
                 break
+            case "6":
+                cellClass="cell pressed"
+                break
+            case "7":
+                cellClass="cell wrong-flagged"
+                break
             default:
                 cellClass="cell unexplored"
         }
 
         // set different event handler function for cell by game's state
-        let handleClick = this.props.gameover ? null : this.props.handleclick
+        let handleClick = (this.props.gameover || this.props.gamewin) ? null : this.props.handleclick
+        let handleRightClick = (this.props.gameover || this.props.gamewin) ? (e) => {e.preventDefault()} : this.props.rightclick
 
         return (
             <button
@@ -57,6 +59,9 @@ class Cell extends React.Component {
                 data-posy={this.props.pos[1]}
                 className={cellClass}
                 onClick={handleClick}
+                onContextMenu={handleRightClick}
+                onMouseOver={this.props.mouseover}
+                onMouseLeave={this.props.mouseleave}
             >
             {number}
             </button>

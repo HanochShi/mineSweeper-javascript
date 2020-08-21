@@ -22,7 +22,11 @@ class ChessPanel extends React.Component {
                         pos={[i, j]}
                         cellstate={chessState[i][j]}
                         handleclick={this.props.handleclick}
+                        rightclick={this.props.rightclick}
+                        mouseover={this.props.mouseover}
+                        mouseleave={this.props.mouseleave}
                         gameover={this.props.gameover}
+                        gamewin={this.props.gamewin}
                         >
                     </Cell>
                 )
@@ -37,6 +41,8 @@ class ChessPanel extends React.Component {
                     height: height
                     }}
                 className="chess-panel"
+                onMouseDown={this.props.mousedown}
+                onMouseUp={this.props.mouseup}
             >
             {cells}
             </div>

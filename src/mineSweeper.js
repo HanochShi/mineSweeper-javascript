@@ -9,11 +9,17 @@ class MineSweeper extends React.Component {
         this.state = {
             cellRowCount: 9,
             cellColumnCount: 9,
-            mineCount: 10,
+            mineCount: 2,
             mineState: null,
             chessState: null,
             gameOver: false,
-            numberOfCell: []
+            gameWin: false,
+            numberOfCell: [],
+            timeElapsed: 0,
+            leftMineCount: 2,
+            timer: null,
+            cellExplored: 0,
+            mousePressed: false,
             /* 
             chessState:
             0: unexplored
@@ -22,6 +28,8 @@ class MineSweeper extends React.Component {
             3: questioned
             4: triggered
             5: revealed
+            6: mouse down(not up yet)
+            7: flagged but actually not mine 
             */
         }
 
@@ -40,7 +48,6 @@ class MineSweeper extends React.Component {
             } while (this.state.mineState[i][j])
             this.state.mineState[i][j] = true;
         }
-        console.log(this.state.mineState)
 
         //create a 2-dim array to store current display state of every cell
         this.state.chessState = []
@@ -74,6 +81,9 @@ class MineSweeper extends React.Component {
                 if (this.state.mineState[i][j] && tempState[i][j] !== 4) {
                     tempState[i][j] = 5
                 }
+                if (tempState[i][j] == 2 && !this.state.mineState[i][j]) {
+                    tempState[i][j] = 7
+                }
             }
         }
         this.setState({
@@ -81,14 +91,15 @@ class MineSweeper extends React.Component {
         })
     }
 
+    //if flip a cell that there's no mines around, flip all cells around it
     continuousExplore = (x, y, tempState) => {
         x = parseInt(x)
         y = parseInt(y)
         let newState = tempState
-        if (x == -1 || y == -1 || x == this.state.cellRowCount-1 || y == this.state.cellColumnCount-1) {
+        if (x == -1 || y == -1 || x == this.state.cellRowCount || y == this.state.cellColumnCount) {
             return newState
         }
-        if (!this.state.mineState[x][y] && newState[x][y] == 0) {
+        if (!this.state.mineState[x][y] && (newState[x][y] == 6 || newState[x][y] == 0)) {
             if (this.state.numberOfCell[x][y] == 0) {
                 newState[x][y] = 1
                 this.continuousExplore(x-1, y-1, newState)
@@ -102,6 +113,9 @@ class MineSweeper extends React.Component {
             } else {
                 newState[x][y] = 1
             }
+            this.setState((state) => ({
+                cellExplored: parseInt(state.cellExplored) + 1,
+            }))
         }
         return newState
     }
@@ -111,17 +125,234 @@ class MineSweeper extends React.Component {
         let y = e.target.dataset.posy
         let tempState = this.state.chessState
         let gameOver = this.state.gameOver
+        let gameWin = this.state.gameWin
+        let timer = this.state.timer
+
+        if (tempState[x][y] == 2 || tempState[x][y] == 3 ) {
+            return
+        }
+
+        if (!timer && !gameOver && !gameWin) {
+            this.setState({
+                timeElapsed: 1
+            })
+            timer = setInterval(this.tick, 1000)
+        }
+
         if (!this.state.mineState[x][y] ) {
             tempState = this.continuousExplore(x, y, this.state.chessState)
         } else {
             tempState[x][y] = 4
             gameOver = true
             this.revealAllMines()
+            clearInterval(timer)
         }
         this.setState({
             chessState: tempState,
             gameOver: gameOver,
+            timer: timer,
         })
+    }
+
+    handleRightClick = (e) => {
+        e.preventDefault()
+
+        let x = e.target.dataset.posx
+        let y = e.target.dataset.posy
+        let tempState = this.state.chessState
+        let gameOver = this.state.gameOver
+        let gameWin = this.state.gameWin
+        let timer = this.state.timer
+        let leftMineCount = this.state.leftMineCount
+
+        if (!timer && !gameOver && !gameWin) {
+            this.setState({
+                timeElapsed: 1
+            })
+            timer = setInterval(this.tick, 1000)
+        }
+
+        if (!tempState[x][y]) {
+            tempState[x][y] = 2
+            leftMineCount--
+        } else if (tempState[x][y] == 2) {
+            tempState[x][y] = 3
+            leftMineCount++
+        } else if (tempState[x][y] == 3) {
+            tempState[x][y] = 0
+        }
+
+        this.setState({
+            chessState: tempState,
+            timer: timer,
+            leftMineCount: leftMineCount,
+        })
+    }
+
+    handleMouseDown = (e) => {
+        if (e.button) {
+            return
+        }
+
+        this.setState({
+            mousePressed: true,
+        })
+
+        let x = e.target.dataset.posx
+        let y = e.target.dataset.posy
+        let tempState = this.state.chessState
+        if (tempState[x][y] == 0 && !this.state.gameOver && !this.state.gameWin) {
+            tempState[x][y] = 6
+            this.setState({
+                chessState: tempState
+            })
+        }
+    }
+
+    handleMouseUp = (e) => {
+        if (e.button) {
+            return
+        }
+
+        this.setState({
+            mousePressed: false,
+        })
+
+        let x = e.target.dataset.posx
+        let y = e.target.dataset.posy
+        let tempState = this.state.chessState
+        let gameOver = this.state.gameOver
+        let gameWin = this.state.gameWin
+        let timer = this.state.timer
+
+        if (tempState[x][y] == 6 && !gameOver && !gameWin){
+            if (!timer && !gameOver && !gameWin) {
+                this.setState({
+                    timeElapsed: 1
+                })
+                timer = setInterval(this.tick, 1000)
+            }
+            if (!this.state.mineState[x][y] ) {
+                tempState = this.continuousExplore(x, y, this.state.chessState)
+            } else {
+                tempState[x][y] = 4
+                gameOver = true
+                this.revealAllMines()
+                clearInterval(timer)
+            }
+            this.setState({
+                chessState: tempState,
+                gameOver: gameOver,
+                timer: timer,
+            })
+        }
+    }
+
+    handleMouseOver = (e) => {
+        let x = e.target.dataset.posx
+        let y = e.target.dataset.posy
+        let tempState = this.state.chessState
+        let gameOver = this.state.gameOver
+        let gameWin = this.state.gameWin
+
+        if (this.state.mousePressed && !gameOver && !gameWin) {
+            tempState[x][y] = 6
+            this.setState({
+                chessState: tempState,
+            })
+        }
+    }
+
+    handleMouseLeave = (e) => {
+        let x = e.target.dataset.posx
+        let y = e.target.dataset.posy
+        let tempState = this.state.chessState
+        let gameOver = this.state.gameOver
+        let gameWin = this.state.gameWin
+
+        if (this.state.mousePressed && !gameOver && !gameWin && tempState[x][y] == 6) {
+            tempState[x][y] = 0
+            this.setState({
+                chessState: tempState,
+            })
+        }
+    }
+
+    restartGame = (row, column, mineCount) =>  {
+
+        // create new mine state array
+        let newMineState = []
+        for (let i = 0; i < row; ++i) {
+            newMineState.push(new Array(column).fill(false))
+        }
+        for (let i = 0; i < mineCount; ++i) {
+            let temp, i, j
+            do {
+                temp = Math.random() * row * column
+                i = Math.floor(temp / column)
+                j = Math.floor(temp % column)
+            } while (newMineState[i][j])
+            newMineState[i][j] = true;
+        }
+
+        // create new chess state array
+        let newChessState = []
+        for (let i = 0; i < row; ++i) {
+            newChessState.push(new Array(column).fill(0))
+        }
+
+        // create new array of how many mines there are around certain cell
+        let newNumberOfCell = []
+        for (let i = 0; i < row; ++i) {
+            newNumberOfCell.push(new Array(column).fill(0))
+        }
+        for (let i = 0; i < row; ++i) {
+            for (let j = 0; j < column; ++j) {
+                if (i !== 0 && j !== 0 && newMineState[i-1][j-1]) newNumberOfCell[i][j]++
+                if (i !== 0 && newMineState[i-1][j]) newNumberOfCell[i][j]++
+                if (i !== 0 && j !== column-1 && newMineState[i-1][j+1]) newNumberOfCell[i][j]++
+                if (j !== 0 && newMineState[i][j-1]) newNumberOfCell[i][j]++
+                if (j !== column-1 && newMineState[i][j+1]) newNumberOfCell[i][j]++
+                if (i !== row-1 && j !== 0 && newMineState[i+1][j-1]) newNumberOfCell[i][j]++
+                if (i !== row-1 && newMineState[i+1][j]) newNumberOfCell[i][j]++
+                if (i !==row-1 && j !== column-1 && newMineState[i+1][j+1]) newNumberOfCell[i][j]++
+            }
+        }
+
+        if (this.state.timer) {
+            clearInterval(this.state.timer)
+        }
+
+        this.setState({
+            cellRowCount: row,
+            cellColumnCount: column,
+            mineCount: mineCount,
+            leftMineCount: mineCount,
+            mineState: newMineState,
+            chessState: newChessState,
+            numberOfCell: newNumberOfCell,
+            gameOver: false,
+            gameWin: false,
+            cellExplored: 0,
+            timer: null,
+            timeElapsed: 0,
+        })
+    }
+
+    tick = () => {
+        this.setState({
+            timeElapsed: (this.state.timeElapsed == 999) ? 999 : this.state.timeElapsed + 1
+        })
+    }
+
+    //judge if this game have won
+    componentDidUpdate() {
+        if (!this.state.gameWin && this.state.cellExplored + this.state.mineCount == this.state.cellRowCount * this.state.cellColumnCount) {
+            this.setState({
+                gameWin: true
+            })
+            clearInterval(this.state.timer)
+        }
     }
 
     render() {
@@ -131,7 +362,9 @@ class MineSweeper extends React.Component {
         const mineState = this.state.mineState
         const chessState = this.state.chessState
         const gameOver =this.state.gameOver
+        const gameWin = this.state.gameWin
         const numberOfCell = this.state.numberOfCell
+        const timeElapsed = this.state.timeElapsed
 
         let width = parseInt(cellColumnCount) * 18 + 26 + "px";
 
@@ -148,8 +381,18 @@ class MineSweeper extends React.Component {
                     mineState={mineState}
                     chessState={chessState}
                     handleclick={this.handleClick}
+                    rightclick={this.handleRightClick}
+                    mouseover={this.handleMouseOver}
+                    mouseleave={this.handleMouseLeave}
+                    mousedown={this.handleMouseDown}
+                    mouseup={this.handleMouseUp}
+                    mousepressed={this.state.mousePressed}
                     gameover={gameOver}
+                    gamewin={gameWin}
                     numberofcell={numberOfCell}
+                    handlerestart={() => this.restartGame(this.state.cellRowCount, this.state.cellColumnCount, this.state.mineCount)}
+                    timeelapsed={timeElapsed}
+                    leftminecount={this.state.leftMineCount}
                     />
             </div>
         )
