@@ -5,7 +5,7 @@ class menuBar extends React.Component {
         return (
             <div className="menu-bar">
                 <ul>
-                    {this.props.menuItems.map((item, index) => 
+                    {this.props.menubaritems.map((item, index) => 
                         <li key={index}>
                             {item}
                         </li>

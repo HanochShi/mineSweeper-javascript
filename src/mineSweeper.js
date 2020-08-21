@@ -122,39 +122,39 @@ class MineSweeper extends React.Component {
         return newState
     }
     
-    handleClick = (e) => {
-        let x = e.target.dataset.posx
-        let y = e.target.dataset.posy
-        let tempState = this.state.chessState
-        let gameOver = this.state.gameOver
-        let gameWin = this.state.gameWin
-        let timer = this.state.timer
+    // handleClick = (e) => {
+    //     let x = e.target.dataset.posx
+    //     let y = e.target.dataset.posy
+    //     let tempState = this.state.chessState
+    //     let gameOver = this.state.gameOver
+    //     let gameWin = this.state.gameWin
+    //     let timer = this.state.timer
 
-        if (tempState[x][y] == 2 || tempState[x][y] == 3 ) {
-            return
-        }
+    //     if (tempState[x][y] == 2 || tempState[x][y] == 3 ) {
+    //         return
+    //     }
 
-        if (!timer && !gameOver && !gameWin) {
-            this.setState({
-                timeElapsed: 1
-            })
-            timer = setInterval(this.tick, 1000)
-        }
+    //     if (!timer && !gameOver && !gameWin) {
+    //         this.setState({
+    //             timeElapsed: 1
+    //         })
+    //         timer = setInterval(this.tick, 1000)
+    //     }
 
-        if (!this.state.mineState[x][y] ) {
-            tempState = this.continuousExplore(x, y, this.state.chessState)
-        } else {
-            tempState[x][y] = 4
-            gameOver = true
-            this.revealAllMines()
-            clearInterval(timer)
-        }
-        this.setState({
-            chessState: tempState,
-            gameOver: gameOver,
-            timer: timer,
-        })
-    }
+    //     if (!this.state.mineState[x][y] ) {
+    //         tempState = this.continuousExplore(x, y, this.state.chessState)
+    //     } else {
+    //         tempState[x][y] = 4
+    //         gameOver = true
+    //         this.revealAllMines()
+    //         clearInterval(timer)
+    //     }
+    //     this.setState({
+    //         chessState: tempState,
+    //         gameOver: gameOver,
+    //         timer: timer,
+    //     })
+    // }
 
     handleRightClick = (e) => {
         e.preventDefault()
@@ -257,7 +257,7 @@ class MineSweeper extends React.Component {
         let gameOver = this.state.gameOver
         let gameWin = this.state.gameWin
 
-        if (this.state.mousePressed && !gameOver && !gameWin) {
+        if (this.state.mousePressed && tempState[x][y] == 0 && !gameOver && !gameWin) {
             tempState[x][y] = 6
             this.setState({
                 chessState: tempState,
@@ -271,7 +271,7 @@ class MineSweeper extends React.Component {
         let tempState = this.state.chessState
         let gameOver = this.state.gameOver
         let gameWin = this.state.gameWin
-
+        
         if (this.state.mousePressed && !gameOver && !gameWin && tempState[x][y] == 6) {
             tempState[x][y] = 0
             this.setState({
@@ -375,14 +375,13 @@ class MineSweeper extends React.Component {
                 <TitleBar>
                     <span>扫雷</span>
                 </TitleBar>
-                <MenuBar menuItems={menuItems}>
+                <MenuBar menubaritems={menuItems}>
                 </MenuBar>
                 <GamePanel
                     row={cellRowCount}
                     column={cellColumnCount}
                     mineState={mineState}
                     chessState={chessState}
-                    handleclick={this.handleClick}
                     rightclick={this.handleRightClick}
                     mouseover={this.handleMouseOver}
                     mouseleave={this.handleMouseLeave}
