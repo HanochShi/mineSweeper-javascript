@@ -33,7 +33,7 @@ class ChessPanel extends React.Component {
             }
         }
 
-        let height = column * 18 + "px"
+        let height = row * 18 + "px"
 
         return (
             <div

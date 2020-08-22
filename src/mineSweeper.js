@@ -7,6 +7,7 @@ class MineSweeper extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            //variable about chess state
             cellRowCount: 9,
             cellColumnCount: 9,
             mineCount: 10,
@@ -15,11 +16,18 @@ class MineSweeper extends React.Component {
             gameOver: false,
             gameWin: false,
             numberOfCell: [],
+            mousePressed: false,
+
+            //variable about info panel
             timeElapsed: 0,
             leftMineCount: 0,
             timer: null,
             cellExplored: 0,
-            mousePressed: false,
+
+            //variable about menu bar
+            activeMenu: -1,
+            menuShown: false,
+            menuItemSelected: [true, false, false, false, false, false],
             /* 
             chessState:
             0: unexplored
@@ -75,12 +83,81 @@ class MineSweeper extends React.Component {
         }
     }
 
+    handleGlobalClick = (e) => {
+        if (e.target.nodeName === "LI") {
+            if (this.state.activeMenu === e.target.dataset.index) {
+                this.setState({
+                    activeMenu: -1,
+                    menuShown: false,
+                })
+            } else {
+                this.setState({
+                    activeMenu: e.target.dataset.index,
+                    menuShown: true,
+                })
+            }
+        } else {
+            this.setState({
+                activeMenu: -1,
+                menuShown: false,
+            })
+        }
+    }
+
+    handleGlobalMouseOver = (e) => {
+        if (e.target.nodeName === "LI" && this.state.menuShown) {
+            this.setState({
+                activeMenu: e.target.dataset.index,
+            })
+        }
+    }
+
+    handleMenuBeginner = () => {
+        let menuItemSelected = this.state.menuItemSelected
+        menuItemSelected[0] = true
+        menuItemSelected[1] = menuItemSelected[2] = menuItemSelected[3] = false
+        this.setState({
+            menuItemSelected: menuItemSelected,
+            activeMenu: -1,
+            menuShown: false,
+        })
+        this.restartGame(9, 9, 10)
+    }
+
+    handleMenuIntermediate = () => {
+        let menuItemSelected = this.state.menuItemSelected
+        menuItemSelected[1] = true
+        menuItemSelected[0] = menuItemSelected[2] = menuItemSelected[3] = false
+        this.setState({
+            menuItemSelected: menuItemSelected,
+            activeMenu: -1,
+            menuShown: false,
+        })
+        this.restartGame(16, 16, 40)
+    }
+
+    handleMenuExpert = () => {
+        let menuItemSelected = this.state.menuItemSelected
+        menuItemSelected[2] = true
+        menuItemSelected[0] = menuItemSelected[1] = menuItemSelected[3] = false
+        this.setState({
+            menuItemSelected: menuItemSelected,
+            activeMenu: -1,
+            menuShown: false,
+        })
+        this.restartGame(16, 30, 99)
+    }
+
+    handleMenuCustom = () => {
+        console.log("custom")
+    }
+
     // when player trigger a mine, reveal all rest mines
     revealAllMines = () => {
         let tempState = this.state.chessState
         for (let i = 0; i < this.state.cellRowCount; ++i) {
             for (let j = 0; j < this.state.cellColumnCount; ++j) {
-                if (this.state.mineState[i][j] && tempState[i][j] !== 4) {
+                if (this.state.mineState[i][j] && tempState[i][j] !== 4 && tempState[i][j] !== 2) {
                     tempState[i][j] = 5
                 }
                 if (tempState[i][j] == 2 && !this.state.mineState[i][j]) {
@@ -370,13 +447,29 @@ class MineSweeper extends React.Component {
 
         let width = parseInt(cellColumnCount) * 18 + 26 + "px";
 
+        let menuHandlerSet = {
+            "开局": (() => this.restartGame(this.state.cellRowCount, this.state.cellColumnCount, this.state.mineCount)),
+            "初级": this.handleMenuBeginner,
+            "中级": this.handleMenuIntermediate,
+            "高级": this.handleMenuExpert,
+            "自定义": this.handleMenuCustom,
+        }
+
         return (
-            <div style={{width: width}}>
+            <div
+                style={{width: width}}
+                onClick={this.handleGlobalClick}
+                onMouseOver={this.handleGlobalMouseOver}
+            >
                 <TitleBar>
                     <span>扫雷</span>
                 </TitleBar>
-                <MenuBar menubaritems={menuItems}>
-                </MenuBar>
+                <MenuBar
+                    menubaritems={menuItems}
+                    activemenu={this.state.activeMenu}
+                    menuitemselected={this.state.menuItemSelected}
+                    menuhandlerset={menuHandlerSet}
+                />
                 <GamePanel
                     row={cellRowCount}
                     column={cellColumnCount}

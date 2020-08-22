@@ -79,6 +79,73 @@ code {
   border: 1px solid rgb(216,237,255)
 }
 
+.menu-bar ul li.shown {
+  background-color: rgb(204,232,255);
+  border: 1px solid rgb(184,223,255);
+}
+
+.menu {
+  display: none;
+  margin: 0 -.5em;
+  padding: 2px;
+  background-color: #f2f2f2;
+  border: 1px solid #cfcfcf;
+  box-shadow: 6px 6px 2px -5px #919191;;
+  z-index: 1;
+}
+
+.menu.active {
+  display: block;
+  position: absolute;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  margin:0;
+  padding: 2.5px 0;
+}
+
+.menu-item:hover {
+  background-color: rgb(145,201,247);
+}
+
+.menu-item .mark {
+  display: inline-block;
+  width: 20px;
+  margin-right: 5px;
+}
+
+.menu-item .selected {
+  display: inline-block;
+  width: 20px;
+  height: 19.2px;
+  background-color: rgb(144,200,246);
+  background-image: url(../assets/image/mark.png);
+  background-size: 50% 50%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.menu-item .menu-item-text {
+  display: inline-block;
+  width: 100px;
+}
+
+.menu-item .global-shortcut-key {
+  margin: 0 10px 0 0;
+}
+
+.menu hr {
+  margin: 4.5px 0 4.5px 20px;
+  border-top: 1px solid #dbdbdb;
+  border-bottom: 1px solid #e9e9e9;
+  border-left: none;
+  border-right: none;
+}
+
 .game-panel, .info-panel {
   background-color: rgb(192,192,192);
 }
