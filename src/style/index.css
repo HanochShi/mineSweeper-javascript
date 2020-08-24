@@ -281,7 +281,11 @@ code {
   font-size: 14px;
   font-weight: 900;
   background-color: #c0c0c0;
-  border: 2px outset #fff;
+  /* border: 2px outset #fff; */
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
   outline: none;
 }
 
@@ -309,7 +313,10 @@ code {
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px outset #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
 }
 
 .questioned, .questioned:active {
@@ -318,7 +325,10 @@ code {
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px outset #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
 }
 
 .triggered {
@@ -347,7 +357,10 @@ code {
 
 .disabled, .disabled:active {
   color: transparent;
-  border: 2px outset #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
 }
 
 .explored-0 {
