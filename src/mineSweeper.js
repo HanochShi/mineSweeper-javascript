@@ -118,6 +118,16 @@ class MineSweeper extends React.Component {
         }
     }
 
+    handleGlobalMouseUp = (e) => {
+        if (e.button) {
+            return
+        }
+
+        this.setState({
+            mousePressed: false,
+        })
+    }
+
     handleMenuBeginner = () => {
         let menuItemSelected = this.state.menuItemSelected
         menuItemSelected[0] = true
@@ -494,6 +504,7 @@ class MineSweeper extends React.Component {
                 style={{width: width}}
                 onClick={this.handleGlobalClick}
                 onMouseOver={this.handleGlobalMouseOver}
+                onMouseUp={this.handleGlobalMouseUp}
                 className="mine-sweeper"
             >
                 <TitleBar>
