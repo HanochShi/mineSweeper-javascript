@@ -146,6 +146,71 @@ code {
   border-right: none;
 }
 
+.custom-dialog {
+  visibility: hidden;
+  position: absolute;
+  width: auto;
+  border-left: 1px solid rgb(90,27,43);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+  z-index: 9;
+}
+
+.normal-panel {
+  display: flex;
+  justify-content: center;
+  padding: 30px 20px;
+  background-color: rgb(240,240,240);
+}
+
+.normal-panel .left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: 20px;
+}
+
+.normal-panel label {
+  margin: 3px 0;
+}
+
+.normal-panel input {
+  width: 50px;
+  border: 1px inset #a2a2a2;
+  border-radius: 0;
+  outline: none;
+}
+
+.normal-panel input:hover {
+  border: 1px inset #292929;
+}
+
+.normal-panel input:focus {
+  border: 1px solid rgb(20,130,217);
+}
+
+.normal-panel button {
+  width: 60px;
+  border: 1px solid #b0b0b0;
+  border-radius: 0;
+  outline: none;
+}
+
+.normal-panel button:focus {
+  border: 1.5px solid rgb(0,120,215);
+}
+
+.normal-panel button:hover {
+  background-color: rgb(229,241,251);
+  border: 1px solid rgb(57,150,224);
+}
+
+
+.normal-panel .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
 .game-panel, .info-panel {
   background-color: rgb(192,192,192);
 }

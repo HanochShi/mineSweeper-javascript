@@ -3,7 +3,7 @@ import logoUrl from './assets/image/logo.png';
 import TitleBarButtons from './titleBarButtons';
 
 class TitleBar extends React.Component {
-    render() {
+    render(props) {
         return (
             <div className="bg-theme title-bar">
                 <div className="left">
@@ -11,7 +11,10 @@ class TitleBar extends React.Component {
                     {this.props.children}
                 </div>
                 <div className="right">
-                    <TitleBarButtons enable={[1, 1, 1]} />
+                    <TitleBarButtons
+                        enable={this.props.enable ? this.props.enable : [1, 1, 1]} 
+                        handleclose={this.props.handleclose ? this.props.handleclose : null}
+                    />
                 </div>
             </div>
         )

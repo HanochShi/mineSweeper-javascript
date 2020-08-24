@@ -1,5 +1,4 @@
 import React from 'react';
-import { renderIntoDocument } from 'react-dom/test-utils';
 
 class Cell extends React.Component {
 
@@ -45,7 +44,6 @@ class Cell extends React.Component {
         }
 
         // set different event handler function for cell by game's state
-        let handleClick = (this.props.gameover || this.props.gamewin) ? null : this.props.handleclick
         let handleRightClick = (this.props.gameover || this.props.gamewin) ? (e) => {e.preventDefault()} : this.props.rightclick
 
         return (
@@ -58,7 +56,8 @@ class Cell extends React.Component {
                 data-posx={this.props.pos[0]}
                 data-posy={this.props.pos[1]}
                 className={cellClass}
-                onClick={handleClick}
+                onMouseDown={this.props.mousedown}
+                onMouseUp={this.props.mouseup}
                 onContextMenu={handleRightClick}
                 onMouseOver={this.props.mouseover}
                 onMouseLeave={this.props.mouseleave}

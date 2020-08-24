@@ -37,24 +37,11 @@ class Menu extends React.Component {
                 {
                     text: "---",
                 },
-                {
-                    text: "标记",
-                    selected: this.props.menuitemselected[4],
-                    globalShortKey: "",
-                },
-                {
-                    text: "声音",
-                    selected: this.props.menuitemselected[5],
-                    globalShortKey: "",
-                },
-                {
-                    text: "---",
-                },
-                {
-                    text: "扫雷英雄榜",
-                    selected: false,
-                    globalShortKey: "",
-                },
+                // {
+                //     text: "扫雷英雄榜",
+                //     selected: false,
+                //     globalShortKey: "",
+                // },
                 {
                     text: "---",
                 },

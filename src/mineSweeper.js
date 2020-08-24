@@ -2,6 +2,7 @@ import React from 'react';
 import TitleBar from './titleBar';
 import MenuBar from './menuBar';
 import GamePanel from './gamePanel';
+import CustomDialog from './customDialog';
 
 class MineSweeper extends React.Component {
     constructor(props) {
@@ -27,7 +28,12 @@ class MineSweeper extends React.Component {
             //variable about menu bar
             activeMenu: -1,
             menuShown: false,
-            menuItemSelected: [true, false, false, false, false, false],
+            menuItemSelected: [true, false, false, false, true, false],
+
+            //variable about custom dialog
+            customDialogShow: false,
+            customDialogTop: 0,
+            customDialogLeft: 0,
             /* 
             chessState:
             0: unexplored
@@ -149,7 +155,47 @@ class MineSweeper extends React.Component {
     }
 
     handleMenuCustom = () => {
-        console.log("custom")
+        let top = document.querySelector(".mine-sweeper").clientHeight / 2 - document.querySelector(".custom-dialog").clientHeight / 2
+        top = top >= 0 ? top : 0
+        let left = document.querySelector(".mine-sweeper").clientWidth / 2 - document.querySelector(".custom-dialog").clientWidth / 2
+        left = left >= 0 ? left : 0
+        this.setState({
+            customDialogShow: true,
+            customDialogTop: top,
+            customDialogLeft: left,
+        })
+    }
+
+    handleCustomDialogClose = () => {
+        this.setState({
+            customDialogShow: false,
+        })
+    }
+
+    handleCustomDialogOK = (row, column, mineCount) => {
+        this.handleCustomDialogClose()
+        row = row < 9 ? 9 : row
+        row = row > 24 ? 24 : row
+        column = column < 9 ? 9 : column
+        column = column > 30 ? 30 : column
+        mineCount = mineCount < 1 ? 1 : mineCount
+        mineCount = mineCount > (row - 1) * (column - 1) ? (row - 1) * (column - 1) : mineCount
+        this.restartGame(row, column, mineCount)
+        this.setState ({
+            menuItemSelected: [false, false, false, true]
+        })
+    }
+
+    handleMenuExit = () => {
+        //not possible in chrome, so just forget it~
+    }
+
+    handleMenuRule = () => {
+        window.open("https://zhuanlan.zhihu.com/p/26674913")
+    }
+
+    handleMenuGithub = () => {
+        window.open("https://github.com/HanochShi/mineSweeper-javascript")
     }
 
     // when player trigger a mine, reveal all rest mines
@@ -198,40 +244,6 @@ class MineSweeper extends React.Component {
         }
         return newState
     }
-    
-    // handleClick = (e) => {
-    //     let x = e.target.dataset.posx
-    //     let y = e.target.dataset.posy
-    //     let tempState = this.state.chessState
-    //     let gameOver = this.state.gameOver
-    //     let gameWin = this.state.gameWin
-    //     let timer = this.state.timer
-
-    //     if (tempState[x][y] == 2 || tempState[x][y] == 3 ) {
-    //         return
-    //     }
-
-    //     if (!timer && !gameOver && !gameWin) {
-    //         this.setState({
-    //             timeElapsed: 1
-    //         })
-    //         timer = setInterval(this.tick, 1000)
-    //     }
-
-    //     if (!this.state.mineState[x][y] ) {
-    //         tempState = this.continuousExplore(x, y, this.state.chessState)
-    //     } else {
-    //         tempState[x][y] = 4
-    //         gameOver = true
-    //         this.revealAllMines()
-    //         clearInterval(timer)
-    //     }
-    //     this.setState({
-    //         chessState: tempState,
-    //         gameOver: gameOver,
-    //         timer: timer,
-    //     })
-    // }
 
     handleRightClick = (e) => {
         e.preventDefault()
@@ -299,28 +311,47 @@ class MineSweeper extends React.Component {
 
         let x = e.target.dataset.posx
         let y = e.target.dataset.posy
-        let tempState = this.state.chessState
+        let tempChessState = this.state.chessState
+        let tempMineState = this.state.mineState
         let gameOver = this.state.gameOver
         let gameWin = this.state.gameWin
         let timer = this.state.timer
+        let row = this.state.cellRowCount
+        let column = this.state.cellColumnCount
 
-        if (tempState[x][y] == 6 && !gameOver && !gameWin){
+        if (tempChessState[x][y] == 6 && !gameOver && !gameWin){
             if (!timer && !gameOver && !gameWin) {
                 this.setState({
                     timeElapsed: 1
                 })
                 timer = setInterval(this.tick, 1000)
+                //If player triggered a mine at very first, move the mine to let the game continue
+                if (tempMineState[x][y]) {
+                    moveMine:
+                    for (let i = 0; i < row; ++i) {
+                        for (let j = 0; j < column; ++j) {
+                            if (!tempMineState[i][j]) {
+                                tempMineState[i][j] = true
+                                break moveMine
+                            }
+                        }
+                    }
+                    tempMineState[x][y] = false
+                    this.setState({
+                        mineState: tempMineState
+                    })
+                }
             }
-            if (!this.state.mineState[x][y] ) {
-                tempState = this.continuousExplore(x, y, this.state.chessState)
+            if (!tempMineState[x][y] ) {
+                tempChessState = this.continuousExplore(x, y, this.state.chessState)
             } else {
-                tempState[x][y] = 4
+                tempChessState[x][y] = 4
                 gameOver = true
                 this.revealAllMines()
                 clearInterval(timer)
             }
             this.setState({
-                chessState: tempState,
+                chessState: tempChessState,
                 gameOver: gameOver,
                 timer: timer,
             })
@@ -453,6 +484,9 @@ class MineSweeper extends React.Component {
             "中级": this.handleMenuIntermediate,
             "高级": this.handleMenuExpert,
             "自定义": this.handleMenuCustom,
+            "退出": this.handleMenuExit,
+            "玩法说明": this.handleMenuRule,
+            "源码@Github": this.handleMenuGithub
         }
 
         return (
@@ -460,6 +494,7 @@ class MineSweeper extends React.Component {
                 style={{width: width}}
                 onClick={this.handleGlobalClick}
                 onMouseOver={this.handleGlobalMouseOver}
+                className="mine-sweeper"
             >
                 <TitleBar>
                     <span>扫雷</span>
@@ -487,7 +522,17 @@ class MineSweeper extends React.Component {
                     handlerestart={() => this.restartGame(this.state.cellRowCount, this.state.cellColumnCount, this.state.mineCount)}
                     timeelapsed={timeElapsed}
                     leftminecount={this.state.leftMineCount}
-                    />
+                />
+                <CustomDialog
+                    show={this.state.customDialogShow}
+                    handleClose={this.handleCustomDialogClose}
+                    handleok={this.handleCustomDialogOK}
+                    top={this.state.customDialogTop}
+                    left={this.state.customDialogLeft}
+                    row={this.state.cellRowCount}
+                    column={this.state.cellColumnCount}
+                    minecount={this.state.mineCount}
+                />
             </div>
         )
     }

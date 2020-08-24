@@ -14,10 +14,12 @@ class InfoPanel extends React.Component {
     
     render(props) {
 
+        let leftminecount = this.props.leftminecount >= 0 ? this.props.leftminecount : 0
+
         let leftMineCountLCD = [
-                Math.floor(this.props.leftminecount / 100), 
-                Math.floor(this.props.leftminecount / 10) % 10,
-                Math.floor(this.props.leftminecount % 10)
+                Math.floor(leftminecount / 100), 
+                Math.floor(leftminecount / 10) % 10,
+                Math.floor(leftminecount % 10)
             ],
             timeElapseLCD = [
                 Math.floor(this.props.timeelapsed / 100), 
