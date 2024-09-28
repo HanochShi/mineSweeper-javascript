@@ -2,8 +2,6 @@
 
 基于React的扫雷💣游戏，仿照Windows XP自带的扫雷制作。
 
-可以[点击这里](https://www.shihang.ltd/minesweeper/)在线试玩。
-
 ![](https://raw.githubusercontent.com/HanochShi/mineSweeper-javascript/master/preview/beginner.png)
 
 特性：
@@ -16,8 +14,6 @@
 
 
 Windows-XP style Minesweeper💣 based on React.
-
-You can [click here](https://www.shihang.ltd/minesweeper/) to play online.
 
 Features:
 - Once you flipped a cell that there're no mines around it, all cells around it will be flipped automatically and continuously
